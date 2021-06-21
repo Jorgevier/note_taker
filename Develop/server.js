@@ -1,9 +1,10 @@
-// Dependencies
+
 
 const express = require('express');
 const util = require('util');
 const fs = require('fs');
 const path = require('path');
+const { json } = require('express');
 
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
@@ -12,66 +13,66 @@ const writeFileAsync = util.promisify(fs.writeFile);
 const app = express();
 const PORT = 3000;
 
-// Sets up the Express app to handle data parsing
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Star Wars Characters (DATA)
 
-const characters = [
-  {
-    routeName: 'yoda',
-    name: 'Yoda',
-    role: 'Jedi Master',
-    age: 900,
-    forcePoints: 2000,
-  }
-];
-
-// Routes
 app.use(express.static("./Develop/public"));
-// Basic route that sends the user first to the AJAX Page
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'notes.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 
-// Displays all characters
-//app.get('/api/characters', (req, res) => res.json(characters));
-
-// Displays a single character, or returns false
-// app.get('/api/characters/:character', (req, res) => {
-//   const chosen = req.params.character;
-
-//   console.log(chosen);
-
-  /* Check each character routeName and see if the same as "chosen"
-   If the statement is true, send the character back as JSON,
-   otherwise tell the user no character was found */
-
-//   for (let i = 0; i < characters.length; i++) {
-//     if (chosen === characters[i].routeName) {
-//       return res.json(characters[i]);
-//     }
-//   }
-
-//   return res.json(false);
-// });
-
-// // Create New Characters - takes in JSON input
-// app.post('/api/characters', (req, res) => {
-//   // req.body hosts is equal to the JSON post sent from the user
-//   // This works because of our body parsing middleware
-//   const newCharacter = req.body;
-
-//   // Using a RegEx Pattern to remove spaces from newCharacter
-//   // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-//   newCharacter.routeName = newCharacter.name.replace(/\s+/g, '').toLowerCase();
-//   console.log(newCharacter);
-
-//   characters.push(newCharacter);
-//   res.json(newCharacter);
-// });
-
-// // Starts the server to begin listening
+app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, "notes.html")));
 
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
+
+
+// //app.get('', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+
+// // // Displays all characters
+// // app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, "Develop/notes.html')));
+
+// // app.get('/', (req, res) => res.sendFile(path.join(__dirname, "Develop/index.html')));
+
+
+app.get("/api/notes", (req, res) => {
+readFileAsync("./Develop/db/db.json", "")
+.then(() => {
+    notes = [].concat(JSON.parse())
+    res.json(notes);
+    })
+});
+
+app.post("/api/notes", (req, res) => {
+     const note = req.body;
+     readFileAsync("./Develop/db/db.json", "")
+     .then(() => {
+        const notes = [].concat(JSON.parse());
+        note.id = notes.length + 1
+        notes.push(note);
+        return notes
+     })
+     .then((notes) => {
+         writeFileAsync("./Develop/db/db.json", JSON.stringify(notes))
+        res.json(notes);
+     })
+    });
+app.delete("/api/notes", (req, res) => {
+     const idDelete = parseInt(req.params.id);
+     readFileAsync("./Develop/db/db.json", "")
+     .then(() => {
+        const notes = [].concat(JSON.parse());
+        const newNotes = []
+        for (let i=0; i<notes.length; i++) {
+            if(idDelete !== notes[i].id) {
+                newNotes.push(notes[i])
+            }
+        }
+        return newNotes
+    })
+    .then((notes) => {
+        writeFileAsync("./Develop/db/db.json", JSON.stringify(notes))
+         res.send("saved note");
+    })
+})
+
