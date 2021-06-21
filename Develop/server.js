@@ -47,7 +47,7 @@ readFileAsync("./Develop/db/db.json", "")
 });
 
 app.post("/api/notes", (req, res) => {
-    const notes = JSON.parse(fs.readFileSync("./Develop/db/db.json"));
+    const notes = JSON.parse(fs.readFileAsync("./Develop/db/db.json"));
      const note = req.body;
     //  readFileAsync("./Develop/db/db.json", "")
     note.id = notes.length + 1;
@@ -66,10 +66,10 @@ app.post("/api/notes", (req, res) => {
     //  })
     // });
 app.delete("/api/notes/:id", (req, res) => {
-    const notes = JSON.parse(fs.readFileSync("./Develop/db/db.json"));
+    const notes = JSON.parse(fs.readFileAsync("./Develop/db/db.json"));
      const idDelete = notes.filter((removeNote) => removeNote.id !== req.params.id);
 //     const idDelete = parseInt(req.params.id);
-     fs.writeFileSync("./Develop/db/db.json", JSON.stringify(idDelete));
+     fs.writeFileAsync("./Develop/db/db.json", JSON.stringify(idDelete));
      res.json(idDelete);
 })
     //  .then(() => {
