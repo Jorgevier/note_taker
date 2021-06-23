@@ -60,10 +60,11 @@ app.post("/api/notes", async(req, res) => {
 //} 
     //  })
     // });
-app.delete("/api/notes/", async(req, res) => {
+app.delete("/api/notes/:id", async(req, res) => {
     const notes = JSON.parse(await readFileAsync("./db/db.json"));
-     const idDelete = notes.filter((removeNote) => removeNote.id !== req.params.id);
-//     const idDelete = parseInt(req.params.id);
+     const idDelete = notes.filter((removeNote) => removeNote.id !== parseInt(req.params.id));
+  //   console.log(notes)
+   //  const idDelete = parseInt(req.params.id);
      await writeFileAsync("./db/db.json", JSON.stringify(idDelete));
      res.json(idDelete);
 });
