@@ -19,19 +19,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-app.use(express.static("./Develop/public"));
+app.use(express.static("public")); 
+
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 app.get("/notes", (req, res) => {
-    res.sendFile(path.join(__dirname, "/notes.html"))
+    res.sendFile(path.join(__dirname, "/public/notes.html"))
 });
 
-// app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, 'index.html'))
-// });
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'))
+});
 
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
 
@@ -39,7 +40,7 @@ app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
 
 
 app.get("/api/notes", (req, res) => {
-readFileAsync("./Develop/db/db.json", "")
+readFileAsync("./db/db.json", "")
 .then(() => {
     notes = [].concat(JSON.parse())
     res.json(notes);
@@ -47,29 +48,33 @@ readFileAsync("./Develop/db/db.json", "")
 });
 
 app.post("/api/notes", (req, res) => {
-    const notes = JSON.parse(fs.readFileAsync("./Develop/db/db.json"));
-     const note = req.body;
-    //  readFileAsync("./Develop/db/db.json", "")
+    const notes = JSON.parse(fs.readFileAsync("./db/db.json"));
+    const note = req.body;
+    readFileAsync("./Develop/db/db.json", "")
     note.id = notes.length + 1;
     notes.push(note);
-    fs.writeFileAsync("./Develop/db/db.json", JSON.stringify(notes))
+    fs.writeFileAsync("./db/db.json", JSON.stringify(notes))
     res.json(notes);
 });
     //  .then(() => {
     //     const notes = [].concat(JSON.parse());
 
     //     return notes
-    //  })
-    //  .then((notes) => {
 
-        
+    //deleteNote(id){
+    //return this.getNotes()
+    //  .then((notes) => notes.filter(
+//(note) => note.id !== id))
+//.then((filterNotes) => this.write(filterNotes))
+//} 
+
     //  })
     // });
 app.delete("/api/notes/:id", (req, res) => {
-    const notes = JSON.parse(fs.readFileAsync("./Develop/db/db.json"));
+    const notes = JSON.parse(fs.readFileAsync("./db/db.json"));
      const idDelete = notes.filter((removeNote) => removeNote.id !== req.params.id);
 //     const idDelete = parseInt(req.params.id);
-     fs.writeFileAsync("./Develop/db/db.json", JSON.stringify(idDelete));
+     fs.writeFileAsync("./db/db.json", JSON.stringify(idDelete));
      res.json(idDelete);
 })
     //  .then(() => {
