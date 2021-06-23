@@ -28,44 +28,45 @@ app.use(express.static("public"));
 
 
 
-app.get("/api/notes", (req, res) => {
-readFileAsync("./db/db.json", "")
-.then(() => {
-    notes = [].concat(JSON.parse())
-    res.json(notes);
-    })
+app.get("/api/notes", async(req, res) => {
+    const notes = JSON.parse(await readFileAsync("./db/db.json"));
+    console.log (notes)
+// readFileAsync("./db/db.json", "utf8")
+// .then((data) => {
+//     notes = [].concat(JSON.parse())
+     res.json(notes);
+//     })
 });
 
-app.post("/api/notes", (req, res) => {
-    const notes = JSON.parse(fs.readFileAsync("./db/db.json"));
+app.post("/api/notes", async(req, res) => {
+    const notes = JSON.parse(await readFileAsync("./db/db.json"));
+    console.log (notes)
     const note = req.body;
-    readFileAsync("./Develop/db/db.json", "")
+    //readFileAsync("./db/db.json", "")
     note.id = notes.length + 1;
     notes.push(note);
-    fs.writeFileAsync("./db/db.json", JSON.stringify(notes))
+    await writeFileAsync ("./db/db.json", JSON.stringify(notes))
     res.json(notes);
 });
     //  .then(() => {
     //     const notes = [].concat(JSON.parse());
 
     //     return notes
-
     //deleteNote(id){
     //return this.getNotes()
     //  .then((notes) => notes.filter(
 //(note) => note.id !== id))
 //.then((filterNotes) => this.write(filterNotes))
 //} 
-
     //  })
     // });
-app.delete("/api/notes/:id", (req, res) => {
-    const notes = JSON.parse(fs.readFileAsync("./db/db.json"));
+app.delete("/api/notes/", async(req, res) => {
+    const notes = JSON.parse(await readFileAsync("./db/db.json"));
      const idDelete = notes.filter((removeNote) => removeNote.id !== req.params.id);
 //     const idDelete = parseInt(req.params.id);
-     fs.writeFileAsync("./db/db.json", JSON.stringify(idDelete));
+     await writeFileAsync("./db/db.json", JSON.stringify(idDelete));
      res.json(idDelete);
-})
+});
     //  .then(() => {
     //     const notes = [].concat(JSON.parse());
     //     const newNotes = []
@@ -82,7 +83,7 @@ app.delete("/api/notes/:id", (req, res) => {
     //})
 
     app.get("/", (req, res) => {
-        res.sendFile(path.join(__dirname, "/index.html"));
+        res.sendFile(path.join(__dirname, "/public/index.html"));
     });
     app.get("/notes", (req, res) => {
         res.sendFile(path.join(__dirname, "/public/notes.html"))
