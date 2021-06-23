@@ -13,7 +13,7 @@ I build a program to take notes. You can make a to-do list, grocery list or anyt
 
 ## Video Example
 
-![video example](./video-example/NOTETAKER.mp4)
+![video example](./video_example/NOTETAKER.mp4)
 
 
 ## Programs used
